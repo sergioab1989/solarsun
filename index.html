@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Solar System</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		
+		<script type="module">
+			import * as THREE from "./js/three.module.js";
+			import { OrbitControls } from "./js/OrbitControls.js";
+
+			const scene = new THREE.Scene();
+			
+			scene.background = new THREE.Color(0x000000);
+		
+			//var axesHelper = new THREE.AxesHelper( 5 );
+			//scene.add( axesHelper );
+
+			var camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight ,0.00001,30000);
+
+			var renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			window.addEventListener( 'resize', function()
+			{
+				var width = window.innerWidth;
+				var height = window.innerHeight;
+				renderer.setSize(width,height);
+				camera.aspect = width/height;
+				camera.updateProjectionMatrix();
+			} )
+
+
+
+			var geometrySky = new THREE.SphereGeometry(10000, 600, 400);
+			var materialSky = new THREE.MeshBasicMaterial();
+			materialSky.map = THREE.ImageUtils.loadTexture('assets/sky360.jpg');
+			materialSky.side = THREE.BackSide;
+			var skydome = new THREE.Mesh(geometrySky, materialSky);
+
+			scene.add(skydome);
+
+			//skydome.rotation.x = 1;
+			skydome.rotation.y = 8;
+
+
+			//add geometry
+			const g_sun = new THREE.SphereGeometry(100,200,200);
+			const g_earth = new THREE.SphereGeometry(10,200,200);
+			const g_mercury = new THREE.SphereGeometry(3,200,200);
+			const g_venus = new THREE.SphereGeometry(9,200,200);
+			const g_moon = new THREE.SphereGeometry(1,200,200);
+
+			//Material
+			const m_sun = new THREE.MeshBasicMaterial({
+				map: new THREE.TextureLoader().load('assets/sun_texture.PNG')
+			});
+			const m_earth = new THREE.MeshBasicMaterial({
+				map: new THREE.TextureLoader().load('assets/text_tierra.webp')
+			});
+			const m_mercury = new THREE.MeshBasicMaterial({
+				color: 0xA9A9A9
+			});						
+			const m_venus = new THREE.MeshBasicMaterial({
+				color: 0xC3C35A
+			});
+			const m_moon = new THREE.MeshBasicMaterial( {
+				color: 0xA9A9A9
+			} );
+
+      		//agrear geometria y material a objeto
+			const sun = new THREE.Mesh( g_sun, m_sun );
+			const p_earth = new THREE.Mesh( g_earth, m_earth );
+			const p_mercury = new THREE.Mesh( g_mercury, m_mercury );
+			const p_venus = new THREE.Mesh( g_venus, m_venus );
+      		const moon = new THREE.Mesh( g_moon, m_moon );
+
+      		//Agregaar a Escena
+			scene.add( sun );
+			scene.add( p_earth );
+			scene.add( p_mercury );
+			scene.add( p_venus );
+      		scene.add( moon );
+
+			//const geometry = new THREE.RingGeometry( 1199, 1201, 200 );
+			const geometry = new THREE.TorusGeometry( 1200, 0.2, 5, 200 );
+			const geometry1 = new THREE.TorusGeometry( 800, 0.2, 5, 200 );
+			const geometry2 = new THREE.TorusGeometry( 500, 0.2, 5, 200 );
+			const material = new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide } );
+			const mesh = new THREE.Mesh( geometry, material );
+			const mesh1 = new THREE.Mesh( geometry1, material );
+			const mesh2 = new THREE.Mesh( geometry2, material );
+			scene.add( mesh );
+			scene.add( mesh1 );
+			scene.add( mesh2 );
+
+			mesh.rotation.x = 1.5715;
+			mesh1.rotation.x = 80.11;
+			mesh2.rotation.x = 80.11;
+			
+			camera.position.z = 2000;
+			camera.position.y = 450;
+
+			//OrbitControls
+			var controls = new OrbitControls(camera, renderer.domElement);
+			//controls.target = p_earth.position;
+			controls.enableDamping = true;
+			
+			var contador = 0;
+			var ban = true;
+			var rot = 0.01;
+			var step = 20;
+			var step2 = 10;
+			var step3 = 0;
+			var step4 = 0;
+
+
+			//sun.position.y = -2000;
+
+			//animation
+			var animate = function () {
+				requestAnimationFrame(animate);
+				
+				if (sun.position.y == 2000) {
+					sun.position.y = -2000;
+				} 
+				//sun.position.y += 10;
+
+				sun.rotation.y += 0.01;
+
+				p_earth.rotation.y += 0.05;
+
+				step += 0.005;
+
+				//p_mercury.position.y = sun.position.y
+				p_mercury.position.x = ( 500 * (Math.sin(step)));
+				p_mercury.position.z = ( 500 * (Math.cos(step)));
+
+				step2 += 0.003;
+				//p_venus.position.y = sun.position.y
+				p_venus.position.x = ( 800 * (Math.sin(step2)));
+				p_venus.position.z = ( 800 * (Math.cos(step2)));
+
+				step3 += 0.0015;
+				//p_earth.position.y = sun.position.y
+				p_earth.position.x = ( 1200 * (Math.sin(step3)));
+				p_earth.position.z = ( 1200 * (Math.cos(step3)));
+
+				//mesh.position.y = sun.position.y
+				mesh1.position.y = sun.position.y
+				mesh2.position.y = sun.position.y
+
+				//camara siguiendo orbita de la tierra con el sol
+				//camera.position.x = sun.position.x + ( 1500 * (Math.sin(step3)));
+				//camera.position.z = sun.position.z + ( 1500 * (Math.cos(step3)));
+				//camara siguiendo orbita de la tierra misma 
+				//camera.position.x = p_earth.position.x + ( 200 * (Math.sin(step4)));
+				//camera.position.z = p_earth.position.z + ( 200 * (Math.cos(step4)));
+
+				step4 += 0.1;
+				//moon.position.y = sun.position.y
+				moon.position.x = p_earth.position.x + ( 30 * (Math.sin(step4)));
+				moon.position.z = p_earth.position.z + ( 30 * (Math.cos(step4)));
+
+				//fijar que ve la camara
+				//camera.lookAt(p_earth.position);
+				//controls.target = sun.position;
+				controls.update();
+				renderer.render(scene, camera);
+				stats.update();
+			};
+
+			animate();
+		</script>
+	</body>
+</html>
