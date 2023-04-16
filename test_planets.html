@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>test_planets</title>
+		<style>
+			body { margin: 0; }
+		</style>
+	</head>
+	<body>
+		
+		<script type="module">
+			import * as THREE from "./js/three.module.js";
+			import { OrbitControls } from "./js/OrbitControls.js";
+
+			const scene = new THREE.Scene();
+			scene.background = new THREE.Color(0x000000);
+	
+			//var axesHelper = new THREE.AxesHelper( 5 );
+			//scene.add( axesHelper );
+
+			var camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight ,0.00001,100000);
+
+			var renderer = new THREE.WebGLRenderer({ antialias: true, logarithmicDepthBuffer: true });
+			renderer.setSize( window.innerWidth, window.innerHeight );
+			document.body.appendChild( renderer.domElement );
+
+			window.addEventListener( 'resize', function()
+			{
+				var width = window.innerWidth;
+				var height = window.innerHeight;
+				renderer.setSize(width,height);
+				camera.aspect = width/height;
+				camera.updateProjectionMatrix();
+			} )
+
+
+
+			var geometrySky = new THREE.SphereGeometry(3000, 600, 600);
+			var materialSky = new THREE.MeshBasicMaterial();
+			materialSky.map = THREE.ImageUtils.loadTexture('assets/sky360.jpg');
+			materialSky.side = THREE.BackSide;
+			var skydome = new THREE.Mesh(geometrySky, materialSky);
+
+			scene.add(skydome);
+
+			//rotate skydome
+			skydome.rotation.y = 1.6;
+			//skydome.rotation.z = 8;
+			//skydome.rotation.y = 4;
+		
+
+			/* const g_torus_mars = new THREE.TorusGeometry( 1700, 0.2, 5, 500 );
+			const material_torus = new THREE.MeshBasicMaterial( { color: 0xffffff, side: THREE.DoubleSide } );
+
+			const orbit_mars = new THREE.Mesh( g_torus_mars, material_torus );
+			scene.add( orbit_mars );
+			orbit_mars.rotation.x = 1.5708;
+			
+
+			const geometry = new THREE.RingGeometry( 45, 75, 200 );
+			const texture = new THREE.TextureLoader().load(
+				'assets/saturn_ring_alpha.png'
+			);
+			const material_ring_saturn = new THREE.ShaderMaterial({
+				uniforms: {
+				texture: { value: texture },
+				innerRadius: { value: 45 },
+				outerRadius: { value: 75 }
+				},
+				vertexShader: `
+				varying vec3 vPos;
+				
+				void main() {
+					vPos = position;
+					vec3 viewPosition = (modelViewMatrix * vec4(position, 1.)).xyz;
+					gl_Position = projectionMatrix * vec4(viewPosition, 1.);
+				}
+				`,
+				fragmentShader: `
+				uniform sampler2D texture;
+				uniform float innerRadius;
+				uniform float outerRadius;
+
+				varying vec3 vPos;
+
+				vec4 color() {
+					vec2 uv = vec2(0);
+					uv.x = (length(vPos) - innerRadius) / (outerRadius - innerRadius);
+					if (uv.x < 0.0 || uv.x > 1.0) {
+					discard;
+					}
+					
+					vec4 pixel = texture2D(texture, uv);
+					return pixel;
+				}
+
+				void main() {
+					gl_FragColor = color();
+				}
+				`,
+				transparent: true,
+				side: THREE.DoubleSide
+			}); */
+
+	/* 		const ring_saturn = new THREE.Mesh( geometry,material_ring_saturn );
+			var rot_orbit = 1.3;
+			ring_saturn.rotation.x = rot_orbit;
+			ring_saturn.rotation.y = 0.3;
+			p_mars.rotation.x = -0.3;
+			p_mars.rotation.z = 0.3; */
+
+			//scene.add(ring_saturn)
+
+
+
+
+
+
+
+
+			//Camera position
+			camera.position.z = 10;
+			//camera.position.y = 7500;
+	
+			//OrbitControls
+			var controls = new OrbitControls(camera, renderer.domElement);
+			//controls.target = p_earth.position;
+			controls.enableDamping = true;
+
+			
+			const g_planet = new THREE.SphereGeometry(30,250,250);
+			const g_planet2 = new THREE.SphereGeometry(200,250,250);
+			const g_planet3 = new THREE.SphereGeometry(500,250,250);
+			const g_planet4 = new THREE.SphereGeometry(1000,250,250);
+
+			const m_planet = new THREE.MeshBasicMaterial({
+				map: new THREE.TextureLoader().load('assets/sky360.jpg')
+			});
+			m_planet.side = THREE.BackSide;
+			const planet = new THREE.Mesh( g_planet,m_planet );
+			const planet2 = new THREE.Mesh( g_planet2,m_planet );
+			const planet3 = new THREE.Mesh( g_planet3,m_planet );
+			const planet4 = new THREE.Mesh( g_planet4,m_planet );
+
+			scene.add(planet,planet2,planet3, planet4);
+
+			//p_mars.position.x = 3;
+			var step = 0;
+			//animation
+			var animate = function () {
+				requestAnimationFrame(animate);
+				
+				
+				planet.rotation.y += 0.5;
+				planet2.rotation.y += 0.05;
+				planet3.rotation.y += 0.005;
+				planet4.rotation.y += 0.0005;
+
+  				//step += 0.015;
+				//p_mars.position.x = ( 1700 * (Math.sin(step)));
+				//p_mars.position.z = ( 1700 * (Math.cos(step)));
+/* 				ring_saturn.position.x = ( 1700 * (Math.sin(step)));
+				ring_saturn.position.z = ( 1700 * (Math.cos(step)));  */
+
+				//camera.position.y += -0.15;
+
+				/* if ( camera.position.z <= 3000 ) {
+					camera.position.z -= 10;
+				}else if ( camera.position.z >= 0 ) {
+					camera.position.z += 10;
+				} */
+
+				
+
+				//step += 0.02;
+				//camera.position.x = ( 100 * (Math.sin(step)));
+				//camera.position.z = ( 100 * (Math.cos(step)));
+
+				controls.target = planet.position;
+				controls.update();
+				renderer.render(scene, camera);
+				stats.update();
+			};
+
+			animate();
+		</script>
+	</body>
+</html>

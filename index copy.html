@@ -235,11 +235,9 @@
 			var animate = function () {
 				requestAnimationFrame(animate);
 				
-				if ( sun.position.y == 22000 ) {
+				if ( sun.position.y == 12000 ) {
 					sun.position.y = -6000;
 				}
-
-				sun.position.y += 90;
 
 				sun.rotation.y += 0.01;
 				p_mercury.rotation.y += 0.01;
@@ -291,6 +289,8 @@
 				p_neptune.position.x = ( dist_orbit_neptune * (Math.sin(step_neptune)));
 				p_neptune.position.z = ( dist_orbit_neptune * (Math.cos(step_neptune)));
 
+
+				sun.position.y += 35;
 				
 				p_mercury.position.y = sun.position.y;
 				orbit_mercury.position.y = sun.position.y;

@@ -39,9 +39,8 @@
 			scene.add(skydome);
 
 			//skydome.rotation.x = 1;
-			skydome.rotation.z = 7.9;
-			skydome.rotation.y = 6.3;
-			skydome.rotation.x = -0.545;
+			skydome.rotation.z = 8;
+			skydome.rotation.y = 4;
 		
 
 			//add geometry
@@ -204,8 +203,8 @@
 			p_saturn.rotation.z = 0.3;
 
 			//Posición de camara
-			camera.position.y = 5000;
-			camera.position.z = 9000;
+			//camera.position.y = 5000;
+			camera.position.z = 7000;
 			
 			//OrbitControls
 			var controls = new OrbitControls(camera, renderer.domElement);
@@ -229,17 +228,15 @@
 			var step_neptune = 5;
 
 
-			sun.position.y = -6000;
+			//sun.position.y = -2000;
 
 			//animation
 			var animate = function () {
 				requestAnimationFrame(animate);
 				
-				if ( sun.position.y == 22000 ) {
+				if (sun.position.y == 23000) {
 					sun.position.y = -6000;
 				}
-
-				sun.position.y += 90;
 
 				sun.rotation.y += 0.01;
 				p_mercury.rotation.y += 0.01;
@@ -291,32 +288,16 @@
 				p_neptune.position.x = ( dist_orbit_neptune * (Math.sin(step_neptune)));
 				p_neptune.position.z = ( dist_orbit_neptune * (Math.cos(step_neptune)));
 
-				
-				p_mercury.position.y = sun.position.y;
-				orbit_mercury.position.y = sun.position.y;
-				
-				p_venus.position.y = sun.position.y;
-				orbit_venus.position.y = sun.position.y;
-				
-				p_earth.position.y = sun.position.y;
-				moon.position.y = sun.position.y;
-				orbit_earth.position.y = sun.position.y;
 
-				p_mars.position.y = sun.position.y;
-				orbit_mars.position.y = sun.position.y;
+				/* sun.position.y += 0;
+				orbit_earth.position.y = sun.position.y
+ 				orbit_venus.position.y = sun.position.y
+				orbit_mercury.position.y = sun.position.y
+				p_earth.position.y = sun.position.y
+				moon.position.y = sun.position.y
+				p_mercury.position.y = sun.position.y
+				p_venus.position.y = sun.position.y */
 
-				p_jupiter.position.y = sun.position.y;
-				orbit_jupiter.position.y = sun.position.y;
-
-				p_saturn.position.y = sun.position.y;
-				ring_saturn.position.y = sun.position.y;
-				orbit_saturn.position.y = sun.position.y;
-
-				p_uranus.position.y = sun.position.y;
-				orbit_uranus.position.y = sun.position.y;
-
-				p_neptune.position.y = sun.position.y;
-				orbit_neptune.position.y = sun.position.y;
 
 				//camara siguiendo orbita de la tierra con el sol
 				//camera.position.x = sun.position.x + ( 1500 * (Math.sin(step3)));
@@ -329,7 +310,7 @@
 
 				//fijar que ve la camara
 				//camera.lookAt(sun.position);
-				controls.target = sun.position;
+				//controls.target = sun.position;
 				controls.update();
 				renderer.render(scene, camera);
 				stats.update();
